@@ -58,51 +58,49 @@ fitMpgAndWtAndQsecAndAm <- lm(mpg ~ wt + qsec + am - 1, data= mtcars)
 
 In this brief report we analyzed the dataset ```mtcars``` from the 1974 Motor Trends magazine to evaluate the effect of the automatic or manual transmission on milage. In particular we were interested to evaluate which transmission is better for milage and quantify that difference. The dataset inclued data for 32 different car models from US and non-US makers.
 
-From an initial exploratory data analysis we showed that there seems to be a significant difference in milage between cars with automatic and manual transmission (Fig. 1). However, a closer look at other variables considered in the dataset showed at least one counfounder: car weight (Fig. 2). Car weight appeared to correlate with both milage and transmission type (Fig. 3).
+From an initial exploratory data analysis we showed that there seems to be a significant difference in milage between cars with automatic and manual transmission (Fig. 1). However, a closer look at other variables considered in the dataset showed at least one confounder: car weight (Fig. 2). Car weight appeared to correlate with both milage and transmission type (Fig. 3).
 
 In order to understand the effect of transmission type to milage we started from a multivariable linear model comprising all other variables as predictors and repeatedly removed the least significant one until the mimimal set of significant predictors was obtained.
 
-We obtained a model that used weight, quarter mile time and transmission as predictors, all with being very significant as reported by a simple ANOVA test.
+We ended up with a model that used weight, quarter mile time and transmission as predictors, all being very significant as reported by a simple ANOVA test.
 
-Using the model we could estimate that keeping all the other variables constant switching from automatic to manual transmission would yeld a increase in milage of ```r round(summary(fitMpgAndWtAndQsecAndAm)$coeff[3,1], 2)``` mpg, $CI_{95\%}=($ ```r round(coef(fitMpgAndWtAndQsecAndAm)[3] + c(-1,1)*qt(0.975, fitMpgAndWtAndQsecAndAm$df.residual)*summary(fitMpgAndWtAndQsecAndAm)$coef[3,2], 2)``` $)$.
+Using the model we could estimate that, keeping all the other variables constant, switching from automatic to manual transmission would yeld a decrease in milage of ```r round(summary(fitMpgAndWtAndQsecAndAm)$coeff[3,1], 2)``` mpg, $CI_{95\%}=($ ```r round(coef(fitMpgAndWtAndQsecAndAm)[3] + c(-1,1)*qt(0.975, fitMpgAndWtAndQsecAndAm$df.residual)*summary(fitMpgAndWtAndQsecAndAm)$coef[3,2], 2)``` $)$.
 
 ## Results
 
-### Linear models of considering car weight, seconds to quarter mile and transmission type. 
+### Linear models considering car weight, quarter mile time and transmission type. 
 
 ```{r formula10, echo= FALSE} 
 summary(fitMpgAndWtAndQsecAndAm)$call
 ```
 
-Fitting a linear model without intercept to predict milage from car weight (wt), seconds to complete a quarter mile (qsec) and transmission type (am) we derived that the expected increase in mpg between manual and automatic transmission is ```r round(summary(fitMpgAndWtAndQsecAndAm)$coeff[3,1], 2)``` mpg with a 95% confidence interval (```r round(coef(fitMpgAndWtAndQsecAndAm)[3] + c(-1,1)*qt(0.975, fitMpgAndWtAndQsecAndAm$df.residual)*summary(fitMpgAndWtAndQsecAndAm)$coef[3,2], 2)```), keeping the other variables constant.
-
-The three predictors showed to be highly statistically significant with an adjusted $R^2= 0.9858$.
+Fitting a linear model without intercept to predict milage from car weight (wt), seconds to complete a quarter mile (qsec) and transmission type (am) we derived that the expected increase in mpg between manual and automatic transmission is ```r round(summary(fitMpgAndWtAndQsecAndAm)$coeff[3,1], 2)``` mpg with a 95% confidence interval (```r round(coef(fitMpgAndWtAndQsecAndAm)[3] + c(-1,1)*qt(0.975, fitMpgAndWtAndQsecAndAm$df.residual)*summary(fitMpgAndWtAndQsecAndAm)$coef[3,2], 2)```), keeping the other variables constant. All three predictors showed to be very statistically significant with an adjusted $R^2= 0.9858$.
 
 ```{r coeff10, echo= FALSE}
 summary(fitMpgAndWtAndQsecAndAm)$coeff
 ```
 
-The linear model with the same predictor variables and the intercept resulted to have the transmission type barely significant, the intercept itself not significant and a lower $R^2 = 0.8336$ (data not shown).
-
-Finally the standard R diagnostic plot of a linear model showed a distribution rather close to the normal (Fig. 6) and no evident bias in the residual plots (Fig. 5). However, the standardized residual plot showed a high variability not explained by the chosed predictors (Fig. 7).
+The linear model with the same predictor variables and the intercept resulted to have the transmission type barely significant and the intercept itself not significant as well as a lower $R^2 = 0.8336$ (data not shown). Finally the standard R diagnostic plots of the linear model showed no evident bias in the residual plots (Fig. 5) and a distribution rather close to the normal (Fig. 6). However, the standardized residual plot showed that a high variability not explained by the chosen predictors remained (Fig. 7).
 
 ## Discussion
 
-The initial exploratory data analysis showed that difference in milage between automatic and manual transmission could be actually explained by other counfounding variables that correlated with both milage and transmission type. P-values proved that differences are generally highly significant. However, since no formal checks of the condition under which a T-test statistics can be used have been performed, one should consider T-test results more as qualitative than quantitative results. Common sense and exploratory analysis indicated that weight is likely to be one of the counfounders between milage and transmission. A heavier car will probably consume more than lighter ones. At the same time heavier, bigger and more expensive cars with larger engines are more likely to be equipped with automatic transmission than smaller cars (Fig. 1, 2 and 3). 
+The initial exploratory data analysis revealed that differences in milage between automatic and manual transmission could be actually explained by confounding variables that correlated with both milage and transmission type. P-values proved that differences are generally highly significant (Fig. 1 and 2). However, since no formal checks of the condition under which a T-test statistics can be used have been performed, one should consider T-test results more as qualitative than quantitative results. Common sense and exploratory analysis indicated that weight is likely to be one of the confounders between milage and transmission. A heavier car will probably consume more than lighter ones. At the same time heavier, bigger and more expensive cars with larger engines are more likely to be equipped with automatic transmission than smaller cars (Fig. 1, 2 and 3). 
 
-In addition to weight other variables could explain the difference in milage. In fact the time to complete a quarter mile (qsec) resulted to summarise quite well the effect of number of cylinders, displacement, rear axle ratio, gross engine power. Fig. 4 shows that there is a clear difference in milage for cars with or without automatic transmission as well as a relation between milage and both weight and qsec.
+In addition to weight other variables could explain the difference in milage. In fact, the time to complete a quarter mile (qsec) resulted to summarise quite well the effect of number of cylinders (cyl), displacement (disp), rear axle ratio (rat), gross engine power (hp). Fig. 4 shows that there is a clear difference in milage for cars with or without automatic transmission as well as a relation between milage and both weight and seconds to quarter mile.
 
 ## Methods
 
-We applied the commonly used methods for the initial exploratory data analysis of the ```mtcars``` dataset. A graphical overview of the distribution of milage values for different transmission and weight. We used simple T-test for hypothesis testing to assess the statistical significance of the differences shown by the plots. However, no formal check of the distribution of data under test have been performed, so results from the T-test should be considered as qualitative only. Then we plotted milage as a function of weight and transmission type to confirm there is a correlation between the two predictor variables.
+We applied the commonly used methods for the initial exploratory data analysis of the ```mtcars``` dataset. A box-plot of the distribution of milage values for different transmission and weight (Fig. 1 and 2). We used simple T-test for hypothesis testing to assess the statistical significance of the differences shown by the plots. However, no formal check of the distribution of data under test have been performed. Then we plotted milage as a function of weight and transmission type to confirm there is a correlation between the two predictor variables (Fig. 3).
 
-In order to select the best linear model we applied an iterative approach starting from a model with all variables as predictors of milage. Then, we repeatedly removed the predictore with the worst (higher) P-value -as reported in the model estimated coefficients- from the list of predictors and recomputed the model. During this phase we kept the intercept for all the models. We continued to remove variables until we obtained a minimal set of statistically significant predictors. Finally, since the resulting model had the intercept value as not statistically significant we tested the same model without the intercept. This gave an even better model with higher $R^2$ and better P-values for all predictors. In particular the P-value for ```am``` improved a lot.
+In order to select the best linear model we applied an iterative approach starting from a model with all variables as predictors of milage. Then, we repeatedly removed the predictore with the worst (higher) P-value -as reported in the model estimated coefficients- from the list of predictors and recomputed the model. During this phase we always included the intercept in the model. We continued to remove variables until we obtained a minimal set of statistically significant predictors. Finally, since the resulting model had the intercept value not statistically significant we tested the same model without the intercept. This gave an even better model with higher $R^2$ and better P-values for all predictors. In particular the P-value for ```am``` improved a lot. Diagnostics of the resulting linear model was done using the standard R plots of residuals versus fitted values, Q-Q, and leverage (Fig. 5, 6, 7 and 8).
+
+Finally, we plotted milage as function of time to quarter mile (x axis) and weight (color code) grouping by transmission type. Then we added the lines representing the linear model of milage against time to quarter mile for automatic and manual transmission cars (Fig. 4).
 
 ## Conclusions
 
-Based on an initial exploratory analysis we identified that (at least) car weight is a counfounder when considering the correlation between transmission type and milage. We defined and checked different linear models to predict milage from the other variables in the dataset.
+Based on an initial exploratory analysis we identified that (at least) car weight is a confounder when considering the correlation between transmission type and milage. We defined and checked different linear models to predict milage from the other variables in the dataset.
 
-Applying an interative process to reduce the number of predictor to the minimum set we obtained a model that used weight, seconds to complete a quarted mile and transmission type. We estimated that on average cars with automatic transmission has a milage of ```r round(summary(fitMpgAndWtAndQsecAndAm)$coeff[3,1], 2)``` mpg greater than manual ones, keeping all other variable constant.
+Applying an interative process to reduce the number of predictor to the minimum set we obtained a model that used weight, time to quarter mile and transmission type. We estimated that on average cars with automatic transmission has a milage of ```r round(summary(fitMpgAndWtAndQsecAndAm)$coeff[3,1], 2)``` mpg higher than manual, keeping all other variable constant.
 
 Finally, since it appears that many variables are confounders between milage and transmission, in order to obtain more reliable results one should consider to collect data from a sample of car data where the same make and model is measured both with and without automatic transmission. This would greatly minimizethe counfounding factor of other variables.
 
@@ -149,65 +147,6 @@ text(x= 1.5, y= 4.75,
            )
      )
 
-# boxplot(mpg ~ cyl, data= mtcars, 
-#         main= "Fig. 3: Milage vs. Cylinders", 
-#         xlab= "Cylinders", 
-#         ylab= "MPG", 
-#         ylim= c(9.5, 40))
-# segments(1, 35, 2, 35, lwd= 2)
-# text(x= 1.5, y=36, 
-#      paste("T-test p=", 
-#            round(t.test(mtcars[mtcars$cyl==4,]$mpg,
-#                         mtcars[mtcars$cyl==6,]$mpg)$p.value, 
-#                  6)
-#            )
-#      )
-# segments(2, 23, 3, 23, lwd= 2)
-# text(x= 2.5, y=24, 
-#      paste("T-test p=", 
-#            round(t.test(mtcars[mtcars$cyl==6,]$mpg,
-#                         mtcars[mtcars$cyl==8,]$mpg)$p.value, 
-#                  6)
-#            )
-#      )
-# segments(1, 38, 3, 38, lwd= 2)
-# text(x= 2, y=39, 
-#      paste("T-test p=", 
-#            round(t.test(mtcars[mtcars$cyl==4,]$mpg,
-#                         mtcars[mtcars$cyl==8,]$mpg)$p.value, 
-#                  6)
-#            )
-#      )
-
-# boxplot(wt ~ cyl, data= mtcars, 
-#         main= "Fig. 4: Weight vs. Cylinders", 
-#         xlab= "Cylinders", 
-#         ylab="Weight (lb/1000")
-# segments(1, 3.75, 2, 3.75, lwd= 2)
-# text(x= 1.5, y= 4, 
-#      paste("T-test p=", 
-#            round(t.test(mtcars[mtcars$cyl==4,]$wt,
-#                         mtcars[mtcars$cyl==6,]$wt)$p.value, 
-#                  3)
-#            )
-#      )
-# segments(2, 4.5, 3, 4.5, lwd= 2)
-# text(x= 2.5, y= 4.75, 
-#      paste("T-test p=", 
-#            round(t.test(mtcars[mtcars$cyl==6,]$wt,
-#                         mtcars[mtcars$cyl==8,]$wt)$p.value, 
-#                  3)
-#            )
-#      )
-# segments(1, 5, 3, 5, lwd= 2)
-# text(x= 2, y= 5.25, 
-#      paste("T-test p=", 
-#            round(t.test(mtcars[mtcars$cyl==4,]$wt,
-#                         mtcars[mtcars$cyl==8,]$wt)$p.value, 
-#                  6)
-#            )
-#      )
-
 par(mfrow= c(1, 1))
 plot(mpg ~ wt, data= mtcars, pch= 1 + am*18, 
      main= "Fig. 3: Milage vs. Weight and Transmission", 
@@ -231,30 +170,6 @@ legend("topright", legend=c("Automatic", "Manual", "mpg ~ wt", "mpg ~ wt (manual
        col= c("black", "black", "red", "blue", "blue"),
        lwd= c(1, 0, 2, 2, 2)
        )
-
-# plot(mpg ~ wt, data= mtcars, pch= 1 + (cyl-4)*4, 
-#      main= "Fig. 6: Milage vs. Weight and Cylinders", 
-#      xlab= "Weight (lb/1000)", 
-#      ylab= "MPG")
-# abline(lm(mpg ~ wt, data= mtcars[mtcars$cyl==4,]), 
-#        col= "blue", 
-#        lty= 1, 
-#        lwd= 2)
-# abline(lm(mpg ~ wt, data= mtcars[mtcars$cyl==6,]), 
-#        col= "blue", 
-#        lty= 2, 
-#        lwd= 2)
-# abline(lm(mpg ~ wt, data= mtcars[mtcars$cyl==8,]), 
-#        col= "blue", 
-#        lty= 3, 
-#        lwd= 2)
-# legend("topright", 
-#        legend=c("4 Cyl", "6 Cyl", "8 Cyl", "mpg ~ wt (4 cyl)", "mpg ~ wt (6 cyl)", "mpg ~ wt (8 cyl)"), 
-#        pch= c(1, 9, 17, 32, 32, 32), 
-#        lty= c(0, 0, 0, 1, 2, 3), 
-#        col= c("black", "black", "black", "blue", "blue", "blue"),
-#        lwd= c(1, 1, 1, 2, 2, 2)
-#        )
 
 #
 # mpg vs. qsec and wt
